@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5" lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <title>Autók szerkesztése</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+</head>
+<body>
+<nav class="navbar navbar-expand-sm bg-primary navbar-dark">
+    <div class="container-fluid">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" style="font-weight: bold;color: white" href="/index">Rent-A-Car</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/index">Főoldal</a>
+            </li>
+            <li class="nav-item" sec:authorize="hasRole('admin')">
+                <a class="nav-link" href="/admin">Foglalások</a>
+            </li>
+            <li class="nav-item" sec:authorize="hasRole('admin')">
+                <a class="nav-link active" href="/admin/carmanagement">Autók kezelése</a>
+            </li>
+        </ul>
+        <ul class="nav navbar-nav ml-auto">
+            <li class="nav-item" style="color: white;margin: auto 20px auto auto" sec:authorize="hasRole('user')">
+                Role: user
+            </li>
+            <li class="nav-item" style="color: white;margin: auto 20px auto auto" sec:authorize="hasRole('admin')">
+                Role: admin
+            </li>
+            <li>
+                <form name="logoutForm" th:action="@{/logout}" method="post">
+                    <input class="btn btn-danger" type="submit" value="Kijelentkezés"/>
+                </form>
+            </li>
+        </ul>
+    </div>
+</nav>
+<div>
+    <div class="container" style="margin-top: 20px">
+        <div class="row">
+            <div class="col-10"></div>
+            <div class="col-2">
+                <input id="newcarbtn" type="button" class="btn btn-success" onclick="Openform()" value="Új hozzáadás">
+                <input style="display: none" id="cancelbutton" type="button" class="btn btn-danger" onclick="Openform()" value="Mégse">
+            </div>
+        </div>
+        <div>
+            <form id="addcarform" enctype="multipart/form-data" method="post" th:action="@{/admin/carmanagement/addcar}" style="display: none;margin: 35px 0 60px 0">
+                    <div class="row">
+                        <div class="col-1"></div>
+                            <div class="col-auto">Kép: <input type="file" accept="image/*" name="image"></div>
+                            <div class="col-auto">Név: <input type="text" name="newcarname"></div>
+                            <div class="col-auto">Státusz: <input type="checkbox" name="isactive" checked></div>
+                            <div class="col-auto">Ár: <input type="number" name="price"></div>
+                        <div class="col-auto"><input type="submit" class="btn btn-primary" value="Hozzáad"></div>
+                    </div>
+                    </form>
+        </div>
+        <th:block th:each="car : ${allcar}">
+            <form method="post" th:action="@{/admin/carmanagement/modifycar}" enctype="multipart/form-data" th:id="${car.getID()}">
+                <div class="row justify-content-lg-center" style="margin: 10px 0 10px 0">
+                    <div class="col-lg-auto">
+                        <img height="150" width="250" th:src="${car.getImage()}">
+                    </div>
+                    <div class="col-lg-auto">
+                        <input name="id" th:for="${car.getID()}" th:value="${car.getID()}" hidden>
+                        Név: <input th:for="${car.getID()}" name="carname" th:value="${car.getName()}">
+                    </div>
+                    <div class="col-lg-auto">
+                        <div th:if="${car.isActive()}" style="color: #0d8100;font-weight: bold">Aktív</div>
+                        <div th:unless="${car.isActive()}" style="color: #de0303;font-weight: bold">Inaktív</div>
+                    </div>
+                    <div class="col-lg-auto">
+                        Ár: <input th:for="${car.getID()}" type="number" name="carprice" th:value="${car.getPrice()}">
+                    </div>
+                    <div class="col-lg-auto">
+                        Új kép: <input th:for="${car.getID()}" type="file" accept="image/*" name="image">
+                    </div>
+                    <div class="col-lg-auto">
+                        <div th:if="${car.isActive()}" class="col"><input class="btn btn-primary" th:for="${car.getID()}" type="submit" name="save" value="Mentés"><input class="btn btn-danger" th:for="${car.getID()}" type="submit" name="changestatus" value="Deaktiválás"></div>
+                        <div th:unless="${car.isActive()}" class="col"><input class="btn btn-primary" th:for="${car.getID()}" type="submit" name="save" value="Mentés"><input class="btn btn-danger" th:for="${car.getID()}" type="submit" name="changestatus" value="Aktiválás"></div>
+                    </div>
+                </div>
+                <hr>
+            </form>
+        </th:block>
+    </div>
+</div>
+</body>
+</html>
+<script>
+    function Openform()
+    {
+        var x = document.getElementById("addcarform");
+        if (x.style.display === "none") {
+            x.style.display = "block";
+        } else {
+            x.style.display = "none";
+        }
+        var btnAdd = document.getElementById("newcarbtn");
+        var btnCancel = document.getElementById("cancelbutton");
+        if(btnAdd.style.display === "none"){
+            btnAdd.style.display = "block";
+            btnCancel.style.display = "none";
+        }else {
+            btnAdd.style.display = "none";
+            btnCancel.style.display = "block";
+        }
+    }
+</script>
