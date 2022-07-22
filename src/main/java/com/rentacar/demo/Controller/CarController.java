@@ -56,7 +56,10 @@ public class CarController {
         }
         return result;
     }
-
+    @RequestMapping("/")
+    public String welcome(){
+        return "redirect:/index";
+    }
     @RequestMapping(value = "/index")
     public String listCars(HttpServletRequest req, Model model) throws ParseException {
         if(req.getParameter("from") == null || req.getParameter("to") == null){
