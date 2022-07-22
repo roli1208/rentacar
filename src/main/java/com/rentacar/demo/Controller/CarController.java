@@ -9,28 +9,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import javax.servlet.http.HttpServletRequest;
-import javax.swing.text.DateFormatter;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.time.LocalDate;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalAmount;
 import java.util.*;
 
 @Controller
 public class CarController {
     @Autowired
     private CustomerRepository cusRep;
-
-    public void RentController(CustomerRepository cusRep) {
-        this.cusRep = cusRep;
-    }
     @Autowired
     private CarRepository carRep;
 

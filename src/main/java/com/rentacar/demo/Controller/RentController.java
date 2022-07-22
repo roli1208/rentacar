@@ -1,26 +1,17 @@
 package com.rentacar.demo.Controller;
 
-import com.rentacar.demo.Entity.Car;
 import com.rentacar.demo.Entity.CarRepository;
 import com.rentacar.demo.Entity.Customer;
 import com.rentacar.demo.Entity.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Repository;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.Temporal;
 import java.util.Date;
-
-import static java.time.temporal.ChronoUnit.DAYS;
 
 @Controller
 public class RentController {
